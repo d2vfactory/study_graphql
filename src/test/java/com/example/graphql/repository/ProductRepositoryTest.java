@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -21,14 +22,15 @@ public class ProductRepositoryTest {
     @Autowired
     private ProductRepository repository;
 
-
     @Before
     public void setup() {
-        repository.save(new Product("테스트1"));
-        repository.save(new Product("테스트2"));
-        repository.save(new Product("테스트3"));
-        repository.save(new Product("테스트4"));
-        repository.save(new Product("테스트5"));
+        Stream.of(
+                new Product("테스트1"),
+                new Product("테스트2"),
+                new Product("테스트3"),
+                new Product("테스트4"),
+                new Product("테스트5")
+        ).forEach(repository::save);
     }
 
     @Test
@@ -40,7 +42,7 @@ public class ProductRepositoryTest {
                 .hasSize(5)
                 .extracting("name")
                 .startsWith("테스트1")
-                .endsWith("테스트4","테스트5");
+                .endsWith("테스트4", "테스트5");
 
 
     }

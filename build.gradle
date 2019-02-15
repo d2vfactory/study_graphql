@@ -24,11 +24,12 @@ repositories {
 
 dependencies {
     implementation 'com.graphql-java:graphql-spring-boot-starter:5.0.2'
-    implementation 'com.graphql-java:graphql-java-tools:5.2.4'
+    implementation 'com.graphql-java:graphiql-spring-boot-starter:3.6.0'
+    implementation 'com.graphql-java:graphql-java-tools:5.2.0'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'com.h2database:h2'
-    compileOnly 'org.projectlombok:lombok'
+    compile 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
