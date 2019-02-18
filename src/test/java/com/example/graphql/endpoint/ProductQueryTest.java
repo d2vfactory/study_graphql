@@ -1,7 +1,6 @@
 package com.example.graphql.endpoint;
 
 import com.example.graphql.entity.Product;
-import com.example.graphql.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +24,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class GraphqlEndPointTest {
+public class ProductQueryTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    @Autowired
-    private ProductRepository productRepository;
 
     @Autowired
     private ObjectMapper mapper;
@@ -47,7 +43,7 @@ public class GraphqlEndPointTest {
 
 
     @Test
-    public void getProductsNames() throws JSONException, IOException {
+    public void products_name() throws JSONException, IOException {
         String query = "{products{name}}";
 
         ResponseEntity<String> responseEntity = callQueryGraphql(query);
@@ -67,7 +63,7 @@ public class GraphqlEndPointTest {
     }
 
     @Test
-    public void getProductsNamesAndPrices() throws JSONException, IOException {
+    public void products_name_price() throws JSONException, IOException {
         String query = "{products{name price}}";
 
         ResponseEntity<String> responseEntity = callQueryGraphql(query);

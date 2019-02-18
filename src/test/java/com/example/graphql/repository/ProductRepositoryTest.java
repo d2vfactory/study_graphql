@@ -2,7 +2,7 @@ package com.example.graphql.repository;
 
 import com.example.graphql.entity.Product;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -21,20 +23,20 @@ public class ProductRepositoryTest {
     private ProductRepository repository;
 
 
-    // GraphqlApplication 에서 테스트 데이터 추가하도록 함.
-//    @Before
-//    public void setup() {
-//        Stream.of(1, 2, 3, 4, 5)
-//                .map(x -> new Product("테스트" + x, (x % 2) == 0 ? 500 : 1000))
-//                .forEach(repository::save);
-//    }
+    @Before
+    public void setup() {
+        List<Product> productList = repository.findAll();
+        log.info("# Test Data Set");
+        productList.stream()
+                .forEach(x -> log.info("# {}", x));
+
+    }
 
     @Test
-    @Transactional
     public void findAll() {
         List<Product> productList = repository.findAll();
 
-        Assertions.assertThat(productList)
+        assertThat(productList)
                 .hasSize(5)
                 .extracting("name")
                 .startsWith("테스트1")
@@ -42,10 +44,22 @@ public class ProductRepositoryTest {
         ;
 
 
-        Assertions.assertThat(productList)
+        assertThat(productList)
                 .hasSize(5)
                 .extracting("price")
                 .startsWith(1000, 500, 1000, 500, 1000)
         ;
+    }
+
+    @Test
+    public void update_테스트1_price500() {
+        Product test1 = repository.findById(1L).get();
+        assertThat(test1.getPrice()).isEqualTo(1000);
+
+        test1.setPrice(500);
+        repository.save(test1);
+
+        test1 = repository.findById(1L).get();
+        assertThat(test1.getPrice()).isEqualTo(500);
     }
 }
