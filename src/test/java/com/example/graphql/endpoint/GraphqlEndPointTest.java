@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,17 +35,6 @@ public class GraphqlEndPointTest {
 
     @Autowired
     private ObjectMapper mapper;
-
-    @Before
-    public void setup() {
-        Stream.of(
-                new Product("테스트1"),
-                new Product("테스트2"),
-                new Product("테스트3"),
-                new Product("테스트4"),
-                new Product("테스트5")
-        ).forEach(productRepository::save);
-    }
 
     @Test
     public void getSchema() {
@@ -79,6 +66,32 @@ public class GraphqlEndPointTest {
 
     }
 
+    @Test
+    public void getProductsNamesAndPrices() throws JSONException, IOException {
+        String query = "{products{name price}}";
+
+        ResponseEntity<String> responseEntity = callQueryGraphql(query);
+
+        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+
+
+        JSONObject result = toJsonBody(responseEntity);
+
+        List<Product> productList = jsonToList(result, "products", Product.class);
+
+        assertThat(productList)
+                .hasSize(5)
+                .startsWith(
+                        new Product("테스트1", 1000),
+                        new Product("테스트2", 500)
+                )
+                .endsWith(
+                        new Product("테스트4", 500),
+                        new Product("테스트5", 1000)
+                )
+        ;
+    }
+
     private ResponseEntity<String> callQueryGraphql(String query) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -101,12 +114,20 @@ public class GraphqlEndPointTest {
         return new JSONObject(responseEntity.getBody()).getJSONObject("data");
     }
 
+    private <T> List<T> jsonToList(JSONObject jsonBody, String arrayKey, Class<T> clazz) throws IOException, JSONException {
+        return toListObject(jsonBody.getJSONArray(arrayKey).toString(), clazz);
+    }
+
+    private <T> T jsonToObject(JSONObject jsonBody, String key, Class<T> clazz) throws IOException, JSONException {
+        return toObject(jsonBody.getJSONObject(key).toString(), clazz);
+    }
+
     private <T> List<T> toListObject(String jsonArray, Class<T> clazz) throws IOException {
         return mapper.readValue(jsonArray, TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
     }
 
-    private <T> List<T> jsonToList(JSONObject jsonBody, String arrayKey, Class<T> clazz) throws IOException, JSONException {
-        return toListObject(jsonBody.getJSONArray(arrayKey).toString(), clazz);
+    private <T> T toObject(String json, Class<T> clazz) throws IOException {
+        return mapper.readValue(json, TypeFactory.defaultInstance().constructType(clazz));
     }
 
 

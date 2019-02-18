@@ -5,7 +5,8 @@ schema {
 
 type Product {
     id: Long!
-    name: String
+    name: String!
+    price: Int!
 }
 
 type Query {
@@ -15,8 +16,9 @@ type Query {
 }
 
 type Mutation {
-    newProduct(name: String!): Product!
+    newProduct(name: String!, price: Int!): Product!
     deleteProduct(id: Long!): Boolean
     updateProductName(id: Long!, name: String!): Product!
+    updateProductPrice(id: Long!, price: Int!): Product!
 }
 

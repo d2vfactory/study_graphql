@@ -3,7 +3,6 @@ package com.example.graphql.repository;
 import com.example.graphql.entity.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -22,16 +20,14 @@ public class ProductRepositoryTest {
     @Autowired
     private ProductRepository repository;
 
-    @Before
-    public void setup() {
-        Stream.of(
-                new Product("테스트1"),
-                new Product("테스트2"),
-                new Product("테스트3"),
-                new Product("테스트4"),
-                new Product("테스트5")
-        ).forEach(repository::save);
-    }
+
+    // GraphqlApplication 에서 테스트 데이터 추가하도록 함.
+//    @Before
+//    public void setup() {
+//        Stream.of(1, 2, 3, 4, 5)
+//                .map(x -> new Product("테스트" + x, (x % 2) == 0 ? 500 : 1000))
+//                .forEach(repository::save);
+//    }
 
     @Test
     @Transactional
@@ -42,8 +38,14 @@ public class ProductRepositoryTest {
                 .hasSize(5)
                 .extracting("name")
                 .startsWith("테스트1")
-                .endsWith("테스트4", "테스트5");
+                .endsWith("테스트4", "테스트5")
+        ;
 
 
+        Assertions.assertThat(productList)
+                .hasSize(5)
+                .extracting("price")
+                .startsWith(1000, 500, 1000, 500, 1000)
+        ;
     }
 }
