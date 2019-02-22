@@ -3,12 +3,14 @@ package com.example.graphql.resolver;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.example.graphql.entity.Product;
 import com.example.graphql.repository.ProductRepository;
+import org.springframework.stereotype.Component;
 
-public class Mutation implements GraphQLMutationResolver {
+@Component
+public class ProductMutation implements GraphQLMutationResolver {
 
     private final ProductRepository productRepository;
 
-    public Mutation(ProductRepository productRepository) {
+    public ProductMutation(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
@@ -36,4 +38,6 @@ public class Mutation implements GraphQLMutationResolver {
         productRepository.save(product);
         return product;
     }
+
+
 }
