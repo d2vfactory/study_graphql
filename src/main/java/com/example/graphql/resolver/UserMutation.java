@@ -2,6 +2,7 @@ package com.example.graphql.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.example.graphql.entity.User;
+import com.example.graphql.input.CreateUserInput;
 import com.example.graphql.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,12 @@ public class UserMutation implements GraphQLMutationResolver {
         return user;
     }
 
+    public User createUser(CreateUserInput createUserInput) {
+        User user = new User(createUserInput);
+        userRepository.save(user);
+        return user;
+    }
+
     public boolean deleteUser(long id) {
         userRepository.deleteById(id);
         return true;
@@ -30,6 +37,8 @@ public class UserMutation implements GraphQLMutationResolver {
         User user = userRepository.findById(id).orElse(null);
         user.setName(name);
         userRepository.save(user);
+
+
         return user;
     }
 

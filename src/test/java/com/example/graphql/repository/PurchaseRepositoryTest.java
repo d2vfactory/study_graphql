@@ -100,7 +100,6 @@ public class PurchaseRepositoryTest {
         List<Purchase> purchaseList = purchaseRepository.findAll();
 
         assertThat(purchaseList)
-                .hasSize(4)
                 .extracting("user")
                 .extracting("name")
                 .contains("이정환", "송길주", "김동주", "양충현");
@@ -109,14 +108,6 @@ public class PurchaseRepositoryTest {
     @Test
     @Transactional
     public void update_product1_product2() {
-        purchaseRepository.save(
-                new Purchase(
-                        testProductList.get(0),
-                        testUserList.get(2), // 송길주
-                        LocalDateTime.now())
-        );
-
-
         Purchase purchase = purchaseRepository.findById(1l).get();
 
         assertThat(purchase)
@@ -124,13 +115,6 @@ public class PurchaseRepositoryTest {
                 .extracting("name", "price")
                 .contains(tuple("테스트1", 1000))
         ;
-
-        assertThat(purchase)
-                .extracting("user")
-                .extracting("name", "age")
-                .contains(tuple("송길주", 20))
-        ;
-
 
         // product 변경 : 테스트1 -> 테스트2
         purchase.setProduct(testProductList.get(1));
@@ -142,45 +126,34 @@ public class PurchaseRepositoryTest {
                 .extracting("name", "price")
                 .contains(tuple("테스트2", 500))
         ;
-
-        assertThat(purchase)
-                .extracting("user")
-                .extracting("name", "age")
-                .contains(tuple("송길주", 20))
-        ;
     }
 
     @Test
     @Transactional
     public void update_userAge20_userAge10() {
-        purchaseRepository.save(
-                new Purchase(
-                        testProductList.get(0),
-                        testUserList.get(2), // 송길주
-                        LocalDateTime.now())
-        );
-
-
         Purchase purchase = purchaseRepository.findById(1l).get();
 
         assertThat(purchase)
                 .extracting("user")
                 .extracting("name", "age")
-                .contains(tuple("송길주", 20))
+                .contains(tuple("이정환", 30))
         ;
 
 
-        // user의 age 변경 : 송길주, 20 -> 10
-        User user = userRepository.findById(3l).get();
+        // user의 age 변경 :이정환, 30 -> 10
+        User user = userRepository.findById(1l).get();
         user.setAge(10);
-        userRepository.save(user);
 
+        purchaseRepository.flush();
 
-        assertThat(purchase)
-                .extracting("user")
-                .extracting("name", "age")
-                .contains(tuple("송길주", 10))
+        Purchase purchase2 = purchaseRepository.findById(1l).get();
+
+        assertThat(purchase2.getUser())
+                .hasFieldOrPropertyWithValue("name","이정환")
+                .hasFieldOrPropertyWithValue("age", 10)
         ;
+
+        log.info("# purchase.user : {}", purchase2.getUser());
 
     }
 

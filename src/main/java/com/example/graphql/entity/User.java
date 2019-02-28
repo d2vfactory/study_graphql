@@ -1,5 +1,6 @@
 package com.example.graphql.entity;
 
+import com.example.graphql.input.CreateUserInput;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +23,11 @@ public class User {
     public User(String name, int age) {
         this.name = name;
         this.age = age;
+    }
+
+    public User(CreateUserInput createUserInput) {
+        this.name = createUserInput.getName();
+        this.age = createUserInput.getAge();
     }
 
 }

@@ -18,12 +18,12 @@ public class Purchase {
 
     private LocalDateTime date;
 
-    @OneToOne
-    @JoinColumn(name = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @OneToOne
-    @JoinColumn(name = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Purchase(Product product, User user, LocalDateTime date) {

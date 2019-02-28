@@ -4,6 +4,12 @@ type User {
     age: Int!
 }
 
+input CreateUserInput {
+    name: String!
+    age: Int!
+}
+
+
 extend type Query {
     users: [User]!
     user(id: Long): User!
@@ -12,7 +18,9 @@ extend type Query {
 
 extend type Mutation {
     newUser(name: String!, age: Int!): User!
+    createUser(input: CreateUserInput!): User!
     deleteUser(id: Long!): Boolean
     updateUserName(id: Long!, name: String!): User!
     updateUserAge(id: Long!, age: Int!): User!
 }
+
