@@ -14,7 +14,15 @@
     - (app test모드) jdbc:h2:mem:~/test
     - (db 실행모드) jdbc:h2:tcp://localhost/~/test  
         - 설치파일 : http://www.h2database.com/html/main.html
-    
+
+## GraphQL 구현 방법
+- Query
+    - 조회 명령 처리 (CRUD의 R)
+    - GraphQLQueryResolver를 상속받아 구현
+- Mutation
+    - 추가/수정/삭제 처리 (CRUD의 CUD)  
+    - GraphQLMutationResolver를 상속받아 구현    
+
     
 ## Sample Entity
 ### User
