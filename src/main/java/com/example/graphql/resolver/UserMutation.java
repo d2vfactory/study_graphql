@@ -38,7 +38,6 @@ public class UserMutation implements GraphQLMutationResolver {
         user.setName(name);
         userRepository.save(user);
 
-
         return user;
     }
 

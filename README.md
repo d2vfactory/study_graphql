@@ -7,6 +7,10 @@
     - graphql 요청 웹 UI 제공
 - graphql-java-tools 5.2.0
     - resolver 제공
+
+# db
+- h2db (설치 : tpc로 사용할 경우.)
+    - http://www.h2database.com/html/main.html
     
     
 # Test Sample

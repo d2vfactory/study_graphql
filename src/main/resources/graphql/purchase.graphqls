@@ -1,0 +1,16 @@
+type Purchase {
+    id: Long!
+    date: String!
+    product: Product!
+    user: User!
+}
+
+extend type Query {
+    purchases: [Purchase]!
+    purchase(id: Long): Purchase!
+}
+
+extend type Mutation {
+    newPurchase(productId: Long, userId: Long): Purchase!
+}
+

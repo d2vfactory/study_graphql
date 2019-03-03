@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+
 @Data
 @Entity
 @Table
@@ -31,5 +32,4 @@ public class Purchase {
         this.user = user;
         this.date = date;
     }
-
 }
